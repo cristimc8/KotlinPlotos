@@ -15,22 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.kotlin.kotlinplotos.model.Formula
 import com.kotlin.kotlinplotos.ui.BooleanPreviewParameterProvider
 import com.kotlin.kotlinplotos.ui.components.BlurredImageBackground
 import com.kotlin.kotlinplotos.ui.components.Header
 import com.kotlin.kotlinplotos.ui.components.MathFunctionBlob
 import com.kotlin.kotlinplotos.ui.theme.KotlinPlotosTheme
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 
 @Composable
 fun MathPlotScreen(
-    state: MathPlotContract.State,
-    effectFlow: Flow<MathPlotContract.Effect>?,
+    viewModel: MathPlotViewModel,
 ) {
 
+    val state = viewModel.state
+    val effectFlow = viewModel.effects.receiveAsFlow()
+
     LaunchedEffect(effectFlow) {
-        effectFlow?.collect { effect: MathPlotContract.Effect ->
+        effectFlow.collect { effect: MathPlotContract.Effect ->
             when (effect) {
                 is MathPlotContract.Effect.FormulaSelected -> {
                     Log.d("MathPlotScreen", "Current formula: ${state.currentFormula}")
@@ -41,7 +44,12 @@ fun MathPlotScreen(
 
     Container(modifier = Modifier.fillMaxSize()) {
         Header()
-        MathFunctionsContainer()
+        MathFunctionsContainer(
+            formulas = state.formulaList,
+            onFormulaSelected = { formula ->
+                viewModel.onFormulaSelected(formula)
+            }
+        )
     }
 }
 
@@ -57,7 +65,11 @@ fun Container(modifier: Modifier = Modifier, content: @Composable () -> Unit = {
 }
 
 @Composable
-fun MathFunctionsContainer(modifier: Modifier = Modifier) {
+fun MathFunctionsContainer(
+    modifier: Modifier = Modifier,
+    formulas: List<Formula> = listOf(),
+    onFormulaSelected: (Formula) -> Unit = {},
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -68,18 +80,31 @@ fun MathFunctionsContainer(modifier: Modifier = Modifier) {
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,
         ) {
-            MathFunctionBlob()
+            // foreach formula render a blob
+            formulas.forEach { formula ->
+                MathFunctionBlob(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    formula = formula,
+                    onFormulaSelected = onFormulaSelected,
+                )
+            }
         }
+
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview(@PreviewParameter(BooleanPreviewParameterProvider::class) darkTheme: Boolean) {
+fun DefaultPreview(
+    @PreviewParameter(BooleanPreviewParameterProvider::class) darkTheme: Boolean
+) {
     KotlinPlotosTheme(darkTheme = darkTheme) {
         Container(Modifier.fillMaxSize(), content = {
             Header()
-            MathFunctionsContainer()
+            MathFunctionsContainer(
+                formulas = listOf(Formula.EXAMPLE_FORMULA)
+            )
         })
     }
 }

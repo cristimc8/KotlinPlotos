@@ -1,6 +1,6 @@
 package com.kotlin.kotlinplotos.ui.math_plot
 
-import com.kotlin.kotlinplotos.domain.model.Formula
+import com.kotlin.kotlinplotos.model.Formula
 
 class MathPlotContract {
     data class State (

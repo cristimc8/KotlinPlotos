@@ -4,10 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.kotlin.kotlinplotos.domain.model.Formula
-import com.kotlin.kotlinplotos.domain.model.data.MathFormulasLocalSource
+import androidx.lifecycle.viewModelScope
+import com.kotlin.kotlinplotos.model.Formula
+import com.kotlin.kotlinplotos.model.data.MathFormulasLocalSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,10 +38,12 @@ class MathPlotViewModel @Inject constructor(
         )
     }
 
-    suspend fun onFormulaSelected(formula: Formula) {
+    fun onFormulaSelected(formula: Formula) {
         state = state.copy(
             currentFormula = formula
         )
-        effects.send(MathPlotContract.Effect.FormulaSelected)
+        viewModelScope.launch {
+            effects.send(MathPlotContract.Effect.FormulaSelected)
+        }
     }
 }
