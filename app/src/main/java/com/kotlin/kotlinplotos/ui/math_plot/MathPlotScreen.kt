@@ -87,6 +87,7 @@ fun MathFunctionsContainer(
                         .padding(8.dp),
                     formula = formula,
                     onFormulaSelected = onFormulaSelected,
+                    selected = true
                 )
             }
         }

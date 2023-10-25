@@ -2,7 +2,8 @@ package com.kotlin.kotlinplotos.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -27,12 +28,21 @@ fun MathFunctionBlob(
     modifier: Modifier = Modifier,
     formula: Formula,
     onFormulaSelected: (Formula) -> Unit,
+    selected: Boolean = false,
 ) {
     Box(
         modifier = modifier
             .width(150.dp)
             .height(200.dp)
-            .clip(RoundedCornerShape(24.dp))
+            .border(
+                (if (selected) 2 else 0).dp,
+                (if (selected) androidx.compose.ui.graphics.Color.Cyan
+                else androidx.compose.ui.graphics.Color.Transparent),
+                shape = RoundedCornerShape(24.dp)
+            )
+            .clickable {
+                onFormulaSelected(formula)
+            }
             .background(
                 color = androidx.compose.ui.graphics.Color.hsl(
                     0f,
@@ -40,12 +50,13 @@ fun MathFunctionBlob(
                     0.78f,
                     0.3f
                 ),
+                shape = RoundedCornerShape(24.dp)
             ),
         contentAlignment = Alignment.TopCenter,
     ) {
-        Column (
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-        ){
+        ) {
             Image(
                 painter = painterResource(R.drawable.wwf),
                 contentDescription = null,
@@ -55,7 +66,7 @@ fun MathFunctionBlob(
                     .clip(RoundedCornerShape(12.dp))
             )
             Text(
-                text = "${formula.shortName}(x, y)",
+                text = "${formula.shortName}(x)",
                 modifier = Modifier.padding(top = 6.dp),
                 style = androidx.compose.ui.text.TextStyle(
                     color = androidx.compose.ui.graphics.Color.LightGray,
@@ -66,7 +77,7 @@ fun MathFunctionBlob(
 
             Text(
                 text = formula.name,
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier.padding(top = 20.dp, start = 8.dp, end = 8.dp),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 style = androidx.compose.ui.text.TextStyle(
                     color = androidx.compose.ui.graphics.Color.White,
