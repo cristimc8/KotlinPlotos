@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.kotlin.kotlinplotos.model.Formula
+import com.kotlin.kotlinplotos.infra.FormulaMapper.toFormulaItem
+import com.kotlin.kotlinplotos.model.FormulaData
 import com.kotlin.kotlinplotos.ui.BooleanPreviewParameterProvider
 import com.kotlin.kotlinplotos.ui.components.BlurredImageBackground
 import com.kotlin.kotlinplotos.ui.components.Header
+import com.kotlin.kotlinplotos.ui.components.LaTeXView
 import com.kotlin.kotlinplotos.ui.components.MathFunctionBlob
 import com.kotlin.kotlinplotos.ui.theme.KotlinPlotosTheme
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,7 +38,7 @@ fun MathPlotScreen(
         effectFlow.collect { effect: MathPlotContract.Effect ->
             when (effect) {
                 is MathPlotContract.Effect.FormulaSelected -> {
-                    Log.d("MathPlotScreen", "Current formula: ${state.currentFormula}")
+                    Log.d("MathPlotScreen", "Current formula: ${viewModel.state.currentFormula}")
                 }
             }
         }
@@ -44,8 +46,14 @@ fun MathPlotScreen(
 
     Container(modifier = Modifier.fillMaxSize()) {
         Header()
+        if (state.currentFormula != null) {
+            LatexFormulaDisplayContainer(
+                formula = state.currentFormula,
+            )
+        }
         MathFunctionsContainer(
             formulas = state.formulaList,
+            currentFormula = state.currentFormula,
             onFormulaSelected = { formula ->
                 viewModel.onFormulaSelected(formula)
             }
@@ -67,8 +75,9 @@ fun Container(modifier: Modifier = Modifier, content: @Composable () -> Unit = {
 @Composable
 fun MathFunctionsContainer(
     modifier: Modifier = Modifier,
-    formulas: List<Formula> = listOf(),
-    onFormulaSelected: (Formula) -> Unit = {},
+    formulas: List<FormulaData> = listOf(),
+    currentFormula: FormulaData?,
+    onFormulaSelected: (FormulaData) -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -85,14 +94,22 @@ fun MathFunctionsContainer(
                 MathFunctionBlob(
                     modifier = Modifier
                         .padding(8.dp),
-                    formula = formula,
+                    formula = formula.toFormulaItem(),
                     onFormulaSelected = onFormulaSelected,
-                    selected = true
+                    selected = formula == currentFormula,
                 )
             }
         }
-
     }
+}
+
+@Composable
+fun LatexFormulaDisplayContainer(
+    formula: FormulaData,
+) {
+    LaTeXView(
+        latex = formula.mathViewFormula,
+    )
 }
 
 @Preview(showBackground = true)
@@ -104,7 +121,8 @@ fun DefaultPreview(
         Container(Modifier.fillMaxSize(), content = {
             Header()
             MathFunctionsContainer(
-                formulas = listOf(Formula.EXAMPLE_FORMULA)
+                formulas = listOf(FormulaData.EXAMPLE_FORMULA),
+                currentFormula = FormulaData.EXAMPLE_FORMULA,
             )
         })
     }

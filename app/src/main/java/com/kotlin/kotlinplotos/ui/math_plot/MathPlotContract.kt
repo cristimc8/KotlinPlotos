@@ -1,11 +1,11 @@
 package com.kotlin.kotlinplotos.ui.math_plot
 
-import com.kotlin.kotlinplotos.model.Formula
+import com.kotlin.kotlinplotos.model.FormulaData
 
 class MathPlotContract {
     data class State (
-        val formulaList: List<Formula> = emptyList(),
-        val currentFormula: Formula? = null
+        val formulaList: List<FormulaData> = emptyList(),
+        val currentFormula: FormulaData? = null
     )
 
     sealed class Effect {

@@ -1,6 +1,6 @@
 package com.kotlin.kotlinplotos.model
 
-data class Formula(
+data class FormulaData(
     val id: Number,
     val name: String,
     val formula: String,
@@ -11,9 +11,8 @@ data class Formula(
         return "Formula(id=$id, name='$name', formula='$formula', shortName='$shortName')"
     }
 
-    // declare example formula
     companion object {
-        val EXAMPLE_FORMULA = Formula(
+        val EXAMPLE_FORMULA = FormulaData(
             id = 1,
             name = "Wacky Wibble",
             shortName = "WWF",

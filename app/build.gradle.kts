@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
+    implementation("com.google.accompanist:accompanist-webview:0.31.3-beta")
 
     implementation(libs.viewmodel.compose)
     implementation(libs.dagger.hilt)

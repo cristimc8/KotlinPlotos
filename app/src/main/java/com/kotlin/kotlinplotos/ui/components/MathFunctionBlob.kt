@@ -20,14 +20,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kotlin.kotlinplotos.R
-import com.kotlin.kotlinplotos.model.Formula
+import com.kotlin.kotlinplotos.infra.FormulaMapper.toFormulaData
+import com.kotlin.kotlinplotos.infra.FormulaMapper.toFormulaItem
+import com.kotlin.kotlinplotos.model.FormulaData
+import com.kotlin.kotlinplotos.ui.domain.FormulaItem
 
 @Composable
 fun MathFunctionBlob(
     modifier: Modifier = Modifier,
-    formula: Formula,
-    onFormulaSelected: (Formula) -> Unit,
+    formula: FormulaItem,
+    onFormulaSelected: (FormulaData) -> Unit,
     selected: Boolean = false,
 ) {
     Box(
@@ -40,8 +42,9 @@ fun MathFunctionBlob(
                 else androidx.compose.ui.graphics.Color.Transparent),
                 shape = RoundedCornerShape(24.dp)
             )
+            .clip(RoundedCornerShape(24.dp))
             .clickable {
-                onFormulaSelected(formula)
+                onFormulaSelected(formula.toFormulaData())
             }
             .background(
                 color = androidx.compose.ui.graphics.Color.hsl(
@@ -58,7 +61,7 @@ fun MathFunctionBlob(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                painter = painterResource(R.drawable.wwf),
+                painter = painterResource(id = formula.formulaImageResource),
                 contentDescription = null,
                 modifier = Modifier
                     .width(70.dp)
@@ -94,7 +97,7 @@ fun MathFunctionBlob(
 @Composable
 fun MathFunctionBlobPreview() {
     MathFunctionBlob(
-        formula = Formula.EXAMPLE_FORMULA,
+        formula = FormulaData.EXAMPLE_FORMULA.toFormulaItem(),
         onFormulaSelected = {},
     )
 }

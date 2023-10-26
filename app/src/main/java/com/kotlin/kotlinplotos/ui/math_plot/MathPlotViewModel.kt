@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kotlin.kotlinplotos.model.Formula
+import com.kotlin.kotlinplotos.model.FormulaData
 import com.kotlin.kotlinplotos.model.data.MathFormulasLocalSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +38,7 @@ class MathPlotViewModel @Inject constructor(
         )
     }
 
-    fun onFormulaSelected(formula: Formula) {
+    fun onFormulaSelected(formula: FormulaData) {
         state = state.copy(
             currentFormula = formula
         )
