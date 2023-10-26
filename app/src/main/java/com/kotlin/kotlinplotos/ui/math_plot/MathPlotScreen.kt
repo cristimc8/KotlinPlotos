@@ -2,12 +2,15 @@ package com.kotlin.kotlinplotos.ui.math_plot
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -107,9 +110,28 @@ fun MathFunctionsContainer(
 fun LatexFormulaDisplayContainer(
     formula: FormulaData,
 ) {
-    LaTeXView(
-        latex = formula.mathViewFormula,
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            LaTeXView(
+                latex = formula.mathViewFormula,
+            )
+
+            Button(
+                onClick = { /*TODO*/ },
+            ) {
+                Text(text = "Plot ${formula.shortName}")
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)

@@ -17,7 +17,7 @@ data class FormulaData(
             name = "Wacky Wibble",
             shortName = "WWF",
             formula = "sin(x) * cos(y) * sin(x * y)",
-            mathViewFormula = "\\sin(x) \\cdot \\cos(y) \\cdot \\sin(x \\cdot y)",
+            mathViewFormula = "\\\\sin(x) \\\\cdot \\\\cos(y) \\\\cdot \\\\sin(x \\\\cdot y)",
         )
     }
 }

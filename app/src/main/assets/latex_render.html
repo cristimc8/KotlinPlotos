@@ -11,16 +11,16 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
             onload="renderMathInElement(document.body);"></script>
 </head>
-<body style="background-color:transparent;">
+<body style="
+background-color:transparent;
+display: flex;
+align-items: center;
+justify-content: center;
+">
 
 <p id="ident" style="color: white"></p>
 
 <script>
-    /*katex.render("f(x)^2  = \\sqrt{y}", document.getElementById('ident'), {
-        throwOnError: false
-    });*/
-
-    // wait for `addBody` to be called
     function addBody(latexString) {
         katex.render(latexString, document.getElementById('ident'), {
             throwOnError: false
