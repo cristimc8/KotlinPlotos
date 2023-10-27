@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            KotlinPlotosTheme {
+            KotlinPlotosTheme(darkTheme = true) {
                 MathPlotApp()
             }
         }
@@ -42,6 +42,3 @@ fun MathPlotApp() {
         viewModel = mathPlotViewModel,
     )
 }
-
-
-

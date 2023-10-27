@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -26,8 +27,13 @@ import com.kotlin.kotlinplotos.ui.components.Header
 import com.kotlin.kotlinplotos.ui.components.LaTeXView
 import com.kotlin.kotlinplotos.ui.components.MathFunctionBlob
 import com.kotlin.kotlinplotos.ui.theme.KotlinPlotosTheme
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.entry.entryOf
+import com.patrykandpatrick.vico.views.chart.line.lineChart
 import kotlinx.coroutines.flow.receiveAsFlow
-
 
 @Composable
 fun MathPlotScreen(
@@ -48,10 +54,20 @@ fun MathPlotScreen(
     }
 
     Container(modifier = Modifier.fillMaxSize()) {
-        Header()
+        if (!state.computing) {
+            Header()
+        }
         if (state.currentFormula != null) {
             LatexFormulaDisplayContainer(
                 formula = state.currentFormula,
+                onCompute = { viewModel.onComputing() },
+                computing = state.computing,
+            )
+        }
+        if (state.computing) {
+            ResultChartContainer(
+                x = state.resultX,
+                y = state.resultY,
             )
         }
         MathFunctionsContainer(
@@ -61,6 +77,38 @@ fun MathPlotScreen(
                 viewModel.onFormulaSelected(formula)
             }
         )
+    }
+}
+
+@Composable
+fun ResultChartContainer(
+    modifier: Modifier = Modifier,
+    x: List<Double> = emptyList(),
+    y: List<Double> = emptyList(),
+) {
+    fun getEntries() = List(x.size) { entryOf(x[it], y[it]) }
+    val chartEntryModelProducer = ChartEntryModelProducer(getEntries())
+
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(text = "Result Chart")
+            Chart(
+                chart = lineChart(LocalContext.current),
+                chartModelProducer = chartEntryModelProducer,
+                startAxis = rememberStartAxis(),
+                bottomAxis = rememberBottomAxis(),
+            )
+        }
     }
 }
 
@@ -109,12 +157,16 @@ fun MathFunctionsContainer(
 @Composable
 fun LatexFormulaDisplayContainer(
     formula: FormulaData,
+    onCompute: () -> Unit,
+    computing: Boolean,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        contentAlignment = Alignment.Center,
+        contentAlignment = if (!computing)
+            Alignment.Center else
+            Alignment.TopCenter,
     ) {
         Column(
             modifier = Modifier
@@ -125,10 +177,12 @@ fun LatexFormulaDisplayContainer(
                 latex = formula.mathViewFormula,
             )
 
-            Button(
-                onClick = { /*TODO*/ },
-            ) {
-                Text(text = "Plot ${formula.shortName}")
+            if (!computing) {
+                Button(
+                    onClick = onCompute,
+                ) {
+                    Text(text = "Plot ${formula.shortName}")
+                }
             }
         }
     }

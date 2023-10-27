@@ -62,6 +62,11 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation("com.google.accompanist:accompanist-webview:0.31.3-beta")
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.2.1")
+
+    implementation(libs.vico.compose.m3)
+    implementation(libs.vico.core)
+    implementation(libs.vico.views)
 
     implementation(libs.viewmodel.compose)
     implementation(libs.dagger.hilt)
